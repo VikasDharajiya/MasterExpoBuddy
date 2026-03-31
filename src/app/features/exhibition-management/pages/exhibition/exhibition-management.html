@@ -1,0 +1,34 @@
+<div class="space-y-5">
+  <!-- Page header (Search + Filter + Export + Add) -->
+  <app-page-header
+    [searchText]="searchText"
+    addLabel="Add Exhibition"
+    (searchChanged)="onSearch($event)"
+    (applyFilter)="applyFilters()"
+    (addClicked)="addExhibition()"
+  >
+  </app-page-header>
+
+  <!-- Table -->
+  <app-table
+    [data]="filteredList"
+    [columns]="columns"
+    [actions]="['edit', 'delete']"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+
+  <!-- Add / Edit Dialog -->
+  <!-- <app-staff-dialog
+    [(visible)]="showDialog"
+    [editMode]="editMode"
+    [staff]="selectedStaff"
+    (save)="onSave($event)"
+  /> -->
+
+  <!-- Confirm Delete -->
+  <app-confirm-dialoge />
+
+  <!-- Toast -->
+  <app-toast />
+</div>

@@ -1,0 +1,193 @@
+<app-base-dialoge
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [title]="mode === 'edit' ? 'Edit Category' : 'Add Category'"
+  [subtitle]="
+    mode === 'edit'
+      ? 'Edit below details for a category.'
+      : 'Enter below details to add new category.'
+  "
+  icon="pi pi-box"
+  [submitLabel]="mode === 'edit' ? 'Save' : 'Add'"
+  width="520px"
+  (cancel)="onCancel()"
+  (submit)="onSubmit()"
+>
+  <div class="space-y-4 py-1">
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-gray-700">
+        Category Name <span class="text-red-500">*</span>
+      </label>
+      <input
+        pInputText
+        type="text"
+        [(ngModel)]="form.name"
+        placeholder="Enter category name"
+        class="w-full text-sm"
+      />
+    </div>
+
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-gray-700">
+        Sequence <span class="text-red-500">*</span>
+      </label>
+      <input
+        pInputText
+        type="number"
+        [(ngModel)]="form.sequence"
+        placeholder="Enter sequence"
+        class="w-full text-sm"
+      />
+    </div>
+
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-gray-700">Description</label>
+      <textarea
+        pInputTextarea
+        [(ngModel)]="form.description"
+        placeholder="Type here..."
+        rows="3"
+        class="w-full resize-none text-sm"
+      ></textarea>
+    </div>
+
+    @if (mode === 'edit') {
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-gray-700">Status</label>
+        <p-select
+          [options]="statusOptions"
+          [(ngModel)]="form.status"
+          optionLabel="label"
+          optionValue="value"
+          styleClass="w-full text-sm"
+        ></p-select>
+      </div>
+    }
+
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700 flex items-center gap-1.5">
+        <i class="pi pi-file text-gray-400 text-sm!"></i> Catalogue
+      </label>
+
+      @if (mode === 'edit' && form.catalogueFile) {
+        <div
+          class="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3 bg-white"
+        >
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
+              <span class="text-red-600 text-[10px] font-bold">PDF</span>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-800">{{ form.catalogueFile.name }}</p>
+              <p class="text-xs text-gray-400">{{ form.catalogueFile.size }}</p>
+            </div>
+          </div>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-text p-button-rounded action-btn-delete"
+            (click)="removeCatalogue()"
+          ></button>
+        </div>
+      } @else {
+        <div
+          class="border-2 border-dashed border-gray-200 rounded-xl px-4 py-5 flex items-center justify-between gap-3 bg-gray-50 cursor-pointer hover:bg-gray-100 transition"
+          (click)="fileInput.click()"
+          (dragover)="$event.preventDefault()"
+          (drop)="onDrop($event)"
+        >
+          <div class="flex items-center gap-3">
+            <i class="pi pi-cloud-upload text-gray-400 text-xl!"></i>
+            <div>
+              <p class="text-sm text-gray-600 font-medium">Choose a file or drag & drop.</p>
+              <p class="text-xs text-gray-400">PDF, DOC formats, up to 50 MB.</p>
+            </div>
+          </div>
+          <button
+            pButton
+            label="Browse File"
+            class="p-button-outlined border-gray-300! text-gray-600! bg-white! hover:bg-gray-50! text-sm! py-1.5! px-4! shrink-0"
+            (click)="$event.stopPropagation(); fileInput.click()"
+          ></button>
+        </div>
+        <input
+          #fileInput
+          type="file"
+          accept=".pdf,.doc,.docx"
+          class="hidden"
+          (change)="onFileSelected($event)"
+        />
+      }
+    </div>
+  </div>
+</app-base-dialoge>
+
+<!-- ─── VIEW DIALOG ─── -->
+<!-- <p-dialog 
+  [visible]="visible && mode === 'view'" 
+  (visibleChange)="visibleChange.emit($event)" 
+  [modal]="true"
+  [closable]="true" 
+  [draggable]="false" 
+  [resizable]="false" 
+  styleClass="product-view-dialog"
+  [style]="{ width: '520px' }">
+  
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-3">
+      <div class="p-2.5 rounded-full border border-gray-300 flex">
+        <i class="pi pi-box text-gray-500"></i>
+      </div>
+      <div>
+        <h2 class="text-base font-semibold text-gray-800">{{ category.name }}</h2>
+        <p-tag 
+          [value]="category.status" 
+          [severity]="category.status === 'Active' ? 'success' : 'secondary'"
+          styleClass="mt-1" />
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="py-2 space-y-5">
+    <div class="grid grid-cols-2 gap-4">
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-gray-700">Sequence</label>
+        <p class="text-sm text-gray-700">{{ category.sequence }}</p>
+      </div>
+    </div>
+
+    <div class="space-y-2">
+      <p class="text-xs text-gray-400 font-medium uppercase tracking-wide">Description</p>
+      <p class="text-sm text-gray-700">{{ category.description || 'No description provided.' }}</p>
+    </div>
+
+    @if (category.catalogueFile) {
+      <div class="space-y-2">
+        <p class="text-sm font-medium text-gray-700 flex items-center gap-1.5">
+          <i class="pi pi-file text-gray-400 text-sm!"></i> Catalogue
+        </p>
+        <div class="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3 bg-white">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-red-100 rounded-lg flex items-center justify-center shrink-0">
+              <span class="text-red-600 text-[10px] font-bold">PDF</span>
+            </div>
+            <div>
+              <p class="text-sm font-medium text-gray-800">{{ category.catalogueFile.name }}</p>
+              <p class="text-xs text-gray-400">{{ category.catalogueFile.size }}</p>
+            </div>
+          </div>
+          <button pButton icon="pi pi-download" class="p-button-text p-button-rounded text-gray-500!"></button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button 
+      pButton 
+      icon="pi pi-pencil" 
+      label="Edit"
+      class="w-full p-button-outlined border-gray-200! text-gray-700! bg-white! hover:bg-gray-50!"
+      (click)="onSwitchToEdit()"></button>
+  </ng-template>
+</p-dialog> -->

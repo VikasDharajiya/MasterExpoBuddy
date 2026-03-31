@@ -1,0 +1,114 @@
+<div class="flex h-screen w-full overflow-hidden font-sans bg-white">
+  <!-- LEFT PANEL -->
+  <div class="relative hidden md:flex w-[45%] overflow-hidden">
+    <img
+      src="/assets/images/login-left-img.png"
+      alt="Login Image"
+      class="absolute inset-0 w-full h-full object-cover object-center"
+    />
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="flex flex-1 flex-col items-center justify-center w-[55%] px-8 py-12 bg-white">
+    <div class="w-full max-w-sm animate-fade-in">
+      <!-- Logo -->
+      <div class="flex justify-center mb-8">
+        <div class="w-14 h-16 flex items-center justify-center">
+          <img src="/assets/images/logo.png" alt="Logo" />
+        </div>
+      </div>
+
+      <!-- Heading -->
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-semibold text-gray-900 tracking-tight">Welcome Back!</h1>
+        <p class="mt-1.5 text-sm text-gray-600">Please login to your account</p>
+      </div>
+
+      <!-- FORM -->
+      <form [formGroup]="loginForm" class="space-y-5">
+        <!-- Email -->
+        <div class="flex flex-col gap-1.5">
+          <label class="block text-sm font-medium text-gray-700"> Email </label>
+
+          <input
+            pInputText
+            type="email"
+            formControlName="email"
+            [disabled]="isLoading"
+            placeholder="Enter email address"
+            class="w-full"
+          />
+          <!-- validator -->
+          <!-- @if (f.email.touched && f.email.invalid) {
+            <p class="text-red-500 text-xs">
+              @if (f.email.errors?.['required']) {
+                <span>Email is required</span>
+              }
+              @if (f.email.errors?.['email']) {
+                <span>Invalid email format</span>
+              }
+            </p>
+          } -->
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-1.5">
+          <label class="block text-sm font-medium text-gray-700"> Password </label>
+
+          <p-password
+            formControlName="password"
+            [toggleMask]="true"
+            [feedback]="false"
+            [disabled]="isLoading"
+            placeholder="Enter your password"
+            class="w-full"
+            inputStyleClass="flex-1"
+          >
+          </p-password>
+
+          <!-- @if (f.password.touched && f.password.invalid) {
+            <p class="text-red-500 text-xs">
+              @if (f.password.errors?.['required']) {
+                <span>Password is required</span>
+              }
+              @if (f.password.errors?.['minlength']) {
+                <span>Minimum 6 characters required</span>
+              }
+            </p>
+          } -->
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <p-checkbox
+              formControlName="rememberMe"
+              [disabled]="isLoading"
+              size="small"
+              inputId="Remember"
+            ></p-checkbox>
+
+            <label for="Remember" class="text-gray-500 text-sm"> Remember Me </label>
+          </div>
+
+          <a
+            (click)="onForgotPassword()"
+            class="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium cursor-pointer"
+          >
+            Forgot Password?
+          </a>
+        </div>
+
+        <!-- Button -->
+        <p-button
+          type="button"
+          (click)="onLogin()"
+          [disabled]="isLoading"
+          styleClass="w-full"
+          [loading]="isLoading"
+          label="Login"
+        ></p-button>
+      </form>
+    </div>
+  </div>
+</div>

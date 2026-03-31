@@ -1,0 +1,23 @@
+<div class="space-y-5">
+  <!-- Header -->
+  <app-page-header
+    [searchText]="searchText"
+    addLabel="Add Exhibitor"
+    (searchChanged)="onSearch($event)"
+    (addClicked)="addExhibitor()"
+  ></app-page-header>
+
+  <!-- Table -->
+  <app-table
+    [data]="filteredList"
+    [columns]="columns"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+
+  <!-- Confirm -->
+  <app-confirm-dialoge></app-confirm-dialoge>
+
+  <!-- Toast -->
+  <app-toast></app-toast>
+</div>

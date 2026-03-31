@@ -1,0 +1,38 @@
+/* .settings-menu-item {
+  color: #374151;
+  transition: background 0.15s;
+} */
+
+/* .settings-menu-item:hover {
+  background: #f9fafb;
+  color: #111827;
+} */
+
+/* .settings-menu-active {
+  background: #f9fafb;
+  color: #808080;
+  font-weight: 600;
+}
+
+.settings-menu-active i {
+  color: #2563eb;
+} */
+
+@reference "tailwindcss";
+
+.settings-menu-active {
+  /* @apply bg-blue-50 text-blue-700 font-semibold; */
+  @apply bg-gray-50 text-gray-900;
+
+  i {
+    @apply text-blue-500;
+  }
+}
+
+/* .settings-menu-active .pi-angle-right {
+  @apply opacity-100;
+} */
+
+.settings-menu-active .pi-angle-right {
+  @apply opacity-100 translate-x-0 text-gray-600;
+}

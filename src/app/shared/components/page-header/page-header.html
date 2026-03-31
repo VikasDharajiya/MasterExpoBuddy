@@ -1,0 +1,21 @@
+<div class="flex items-center flex-wrap sm:items-center sm:justify-between mb-4">
+  <!-- Search -->
+  <div class="relative">
+    <i
+      class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm! pointer-events-none"
+    ></i>
+    <input
+      pInputText
+      type="text"
+      [ngModel]="searchText"
+      (ngModelChange)="onSearchChange($event)"
+      placeholder="Search here..."
+      class="search-input pl-9! pr-4! py-2! text-sm! w-90"
+    />
+  </div>
+
+  <div class="flex gap-2">
+    <!-- Add New Button -->
+    <button pButton icon="pi pi-plus" [label]="addLabel" (click)="addClicked.emit()"></button>
+  </div>
+</div>

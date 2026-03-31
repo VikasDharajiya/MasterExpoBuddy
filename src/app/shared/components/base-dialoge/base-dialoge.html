@@ -1,0 +1,47 @@
+<p-dialog
+  [visible]="visible"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [closable]="true"
+  [draggable]="false"
+  [resizable]="false"
+  styleClass="base-dialog"
+  [style]="{ width: width }"
+  [contentStyle]="{ 'max-height': '65vh', overflow: 'auto' }"
+>
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <div class="flex items-start gap-3">
+      <div class="p-2.5 rounded-full border border-gray-300 flex">
+        <i [class]="icon + ' text-gray-500 '"></i>
+      </div>
+      <div>
+        <h2 class="text-base font-semibold text-gray-800">{{ title }}</h2>
+        <p class="text-sm text-gray-400 mt-0.5">{{ subtitle }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Dynamic Content -->
+  <ng-content></ng-content>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 pt-2">
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-outlined text-gray-600! bg-white! border-gray-300! hover:bg-gray-100! px-6!"
+        (click)="cancel.emit()"
+      ></button>
+      <button
+        pButton
+        type="button"
+        [label]="submitLabel"
+        class="px-6!"
+        (click)="submit.emit()"
+      ></button>
+    </div>
+  </ng-template>
+</p-dialog>

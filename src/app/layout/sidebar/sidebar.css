@@ -1,0 +1,32 @@
+@reference "tailwindcss";
+
+.nav-active {
+  @apply bg-blue-50 text-blue-600 font-semibold;
+
+  i {
+    @apply text-blue-600;
+  }
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+}
+
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  transition: all 0.2s ease;
+
+  width: 6px;
+  height: 60%; /* controls size relative to icon */
+
+  border-radius: 9999px;
+  background-color: #006dff; /* blue-500 */
+
+  transition: all 0.2s ease;
+}

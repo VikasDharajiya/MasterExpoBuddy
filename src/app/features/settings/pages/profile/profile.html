@@ -1,0 +1,135 @@
+<div class="space-y-6 max-w-[90%]">
+  <!-- Section title -->
+  <div>
+    <h2 class="text-base font-semibold text-gray-800">Profile</h2>
+    <p class="text-sm text-gray-400 mt-0.5">Your personal information</p>
+  </div>
+
+  <!-- Profile Image -->
+  <div class="flex items-center gap-5">
+    <div
+      class="w-16 h-16 rounded-full bg-gray-100 overflow-hidden flex items-center justify-center shrink-0"
+    >
+      @if (previewUrl) {
+        <img [src]="previewUrl" class="w-full h-full object-cover" />
+      } @else {
+        <i class="pi pi-user text-gray-400 text-2xl!"></i>
+      }
+    </div>
+    <div>
+      <p class="text-sm font-semibold text-gray-800">Profile Image</p>
+      <p class="text-xs text-gray-400 mb-2">Min 400x400px, PNG or JPEG</p>
+      <div class="flex gap-2">
+        <button
+          pButton
+          label="Edit"
+          class="p-button-outlined p-button-sm border-gray-300! text-gray-600! bg-white! hover:bg-gray-50! text-xs! py-1! px-3!"
+          (click)="fileInput.click()"
+        ></button>
+        @if (previewUrl) {
+          <button
+            pButton
+            label="Remove"
+            class="p-button-outlined p-button-sm border-red-300! text-red-500! bg-white! hover:bg-red-50! text-xs! py-1! px-3!"
+            (click)="removeImage()"
+          ></button>
+        }
+      </div>
+      <input
+        #fileInput
+        type="file"
+        accept="image/*"
+        class="hidden"
+        (change)="onFileSelected($event)"
+      />
+    </div>
+  </div>
+
+  <!-- Full Name + Email -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-gray-700">
+        Full Name <span class="text-red-500">*</span>
+      </label>
+      <input pInputText [(ngModel)]="form.name" placeholder="Full Name" class="w-full text-sm" />
+    </div>
+    <div class="space-y-1">
+      <label class="block text-sm font-medium text-gray-700">
+        Email Address <span class="text-red-500">*</span>
+      </label>
+      <input
+        pInputText
+        type="email"
+        [(ngModel)]="form.email"
+        placeholder="Email Address"
+        class="w-full text-sm"
+      />
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex gap-2">
+    <button pButton label="Apply Changes" (click)="onApply()"></button>
+    <button
+      pButton
+      label="Discard"
+      class="p-button-outlined border-gray-300! text-gray-600! bg-white! hover:bg-gray-50!"
+      (click)="onDiscard()"
+    ></button>
+  </div>
+
+  <!-- Divider -->
+  <div class="border-t-2 border-gray-100"></div>
+
+  <!-- Change Password -->
+  <div class="flex items-start justify-between">
+    <div>
+      <h3 class="text-sm font-semibold text-gray-800">Change Password</h3>
+      <p class="text-sm text-gray-400 mt-0.5">Update password for enhanced account security.</p>
+    </div>
+    <button
+      pButton
+      label="Change Password"
+      class="p-button-outlined border-gray-300! text-gray-700! bg-white! hover:bg-gray-50! shrink-0"
+      (click)="showPasswordDialog = true"
+    ></button>
+  </div>
+
+  <!-- Divider -->
+  <div class="border-t-2 border-gray-100"></div>
+
+  <!-- Delete Account -->
+  <div>
+    <h3 class="text-sm font-semibold text-gray-800">Delete Account</h3>
+    <p class="text-sm text-gray-400 mt-0.5">Manage the process of deleting account.</p>
+
+    <!-- Warning banner -->
+    <div class="flex items-center gap-2 bg-[#DF1C41] text-white rounded-lg px-4 py-3 mt-4">
+      <i class="pi pi-exclamation-circle text-sm!"></i>
+      <span class="text-sm font-medium">This action cannot be undone.</span>
+    </div>
+    <p class="text-sm text-gray-500 mt-3">
+      To delete your account, please contact our support team. Deleting your account will
+      permanently remove all associated data.
+    </p>
+    <button
+      pButton
+      label="Contact Support"
+      icon="pi pi-headphones"
+      class="p-button-outlined border-gray-300! text-gray-700! bg-white! hover:bg-gray-50! mt-4"
+    ></button>
+  </div>
+</div>
+
+<!-- Change Password Dialog -->
+<app-change-password-dialog [(visible)]="showPasswordDialog" (save)="onPasswordSave($event)" />
+
+<!-- Toast -->
+<p-toast position="top-right">
+  <ng-template pTemplate="message" let-message>
+    <div class="flex items-center gap-3 w-full">
+      <i class="pi pi-check-circle text-white"></i>
+      <span class="text-white text-sm font-medium flex-1">{{ message.detail }}</span>
+    </div>
+  </ng-template>
+</p-toast>

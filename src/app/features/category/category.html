@@ -1,0 +1,48 @@
+<div class="space-y-5">
+  <!-- Page Header -->
+  <app-page-header
+    [searchText]="searchText"
+    addLabel="Add New"
+    (searchChanged)="onSearch($event)"
+    (applyFilter)="applyFilter()"
+    (clearFilter)="clearFilter()"
+    (addClicked)="openAddDialog()"
+  >
+    <!-- Filter popover content -->
+    <div filterContent class="space-y-3">
+      <div class="space-y-1">
+        <label class="filter-label">Status</label>
+        <p-select
+          [options]="statusOptions"
+          [(ngModel)]="tempStatus"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+        ></p-select>
+      </div>
+    </div>
+  </app-page-header>
+
+  <!-- Table -->
+  <app-table
+    [data]="filteredCategory"
+    [columns]="columns"
+    [actions]="['edit', 'delete']"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+  ></app-table>
+
+  <!-- Add  / Edit Dialog -->
+  <app-category-dialog
+    [(visible)]="showDialog"
+    [mode]="dialogMode"
+    [category]="selectedCategory"
+    (save)="onSave($event)"
+  />
+
+  <!-- Confirm Delete -->
+  <app-confirm-dialoge />
+
+  <!-- Toast -->
+  <app-toast />
+</div>
