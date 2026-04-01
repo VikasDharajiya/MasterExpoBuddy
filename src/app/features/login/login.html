@@ -34,7 +34,6 @@
             pInputText
             type="email"
             formControlName="email"
-            [disabled]="isLoading"
             placeholder="Enter email address"
             class="w-full"
           />
@@ -59,7 +58,6 @@
             formControlName="password"
             [toggleMask]="true"
             [feedback]="false"
-            [disabled]="isLoading"
             placeholder="Enter your password"
             class="w-full"
             inputStyleClass="flex-1"
@@ -84,7 +82,6 @@
             <p-checkbox
               formControlName="rememberMe"
               [binary]="true"
-              [disabled]="isLoading"
               size="small"
               inputId="remember"
             ></p-checkbox>
@@ -104,7 +101,6 @@
         <p-button
           type="button"
           (click)="onLogin()"
-          [disabled]="isLoading"
           styleClass="w-full"
           [loading]="isLoading"
           label="Login"

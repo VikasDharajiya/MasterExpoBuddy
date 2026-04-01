@@ -52,6 +52,7 @@ export class Login {
       return;
     }
 
+    this.loginForm.disable();
     this.isLoading = true;
 
     const formValue = this.loginForm.value;
@@ -59,6 +60,11 @@ export class Login {
 
     localStorage.setItem('isLoggedIn', 'true');
     this.router.navigate(['/dashboard']);
+
+    setTimeout(() => {
+      this.loginForm.enable();
+      this.isLoading = false;
+    }, 1000);
   }
 
   onForgotPassword() {
