@@ -83,12 +83,13 @@
           <div class="flex items-center gap-2">
             <p-checkbox
               formControlName="rememberMe"
+              [binary]="true"
               [disabled]="isLoading"
               size="small"
-              inputId="Remember"
+              inputId="remember"
             ></p-checkbox>
 
-            <label for="Remember" class="text-gray-500 text-sm"> Remember Me </label>
+            <label for="remember" class="text-gray-500 text-sm"> Remember Me </label>
           </div>
 
           <a
