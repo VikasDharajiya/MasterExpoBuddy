@@ -75,10 +75,12 @@
   color: white;
 } */
 
-/* .p-toast .p-toast-message.p-toast-message-warn {
+.p-toast .p-toast-message.p-toast-message-warn {
   background: #f59e0b;
-  color: white;
-} */
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
 
 /* .p-toast .p-toast-message.p-toast-message-error {
   background: #dc2626;

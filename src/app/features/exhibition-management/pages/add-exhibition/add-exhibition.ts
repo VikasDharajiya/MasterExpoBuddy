@@ -11,6 +11,8 @@ import { ExhibitionService } from '@features/exhibition-management/services/exhi
 import { HeaderService } from '@shared/services/header.service';
 import { Toast } from '@shared/components/toast/toast';
 import { MessageService } from 'primeng/api';
+import { EditorModule } from 'primeng/editor';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   standalone: true,
@@ -22,6 +24,8 @@ import { MessageService } from 'primeng/api';
     Toast,
     ButtonModule,
     ToggleSwitchModule,
+    SelectModule,
+    EditorModule,
   ],
   providers: [MessageService],
   templateUrl: './add-exhibition.html',
@@ -49,8 +53,14 @@ export class AddExhibition {
       logo: [''],
       startDate: [null],
       endDate: [null],
-      location: [''],
-      isActive: [false],
+      address: [''],
+      country: [null],
+      state: [null],
+      city: [null],
+      mapLink: [''],
+      organizationName: [''],
+      notes: [''],
+      isActive: [false, Validators.required],
     });
 
     // check edit
@@ -77,6 +87,12 @@ export class AddExhibition {
   logoFile: File | null = null;
   logoPreview: string | null = null;
 
+  countries = [{ name: 'India' }, { name: 'USA' }];
+
+  states = [{ name: 'Gujarat' }, { name: 'Maharashtra' }];
+
+  cities = [{ name: 'Ahmedabad' }, { name: 'Surat' }];
+
   onLogoSelect(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -102,6 +118,8 @@ export class AddExhibition {
 
   submit() {
     if (this.form.valid) {
+      console.log('Form Value:', this.form.value);
+
       if (this.isEditMode) {
         this.exhibitionService.update(this.editId!, this.form.value);
 

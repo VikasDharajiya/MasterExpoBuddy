@@ -123,11 +123,25 @@ export class ExhibitorManagement implements OnInit {
     this.applyFilters();
   }
 
+  // applyFilters() {
+  //   const q = this.searchText.toLowerCase();
+
+  //   this.filteredList = this.exhibitorList.filter((e) => {
+  //     return e.name.toLowerCase().includes(q) || e.exhibitionNames.toLowerCase().includes(q);
+  //   });
+  // }
+
   applyFilters() {
     const q = this.searchText.toLowerCase();
 
     this.filteredList = this.exhibitorList.filter((e) => {
-      return e.name.toLowerCase().includes(q) || e.exhibitionName.toLowerCase().includes(q);
+      const nameMatch = e.name.toLowerCase().includes(q);
+
+      const exhibitionMatch = (e.exhibitionNames || []).some((name) =>
+        name.toLowerCase().includes(q),
+      );
+
+      return nameMatch || exhibitionMatch;
     });
   }
 }

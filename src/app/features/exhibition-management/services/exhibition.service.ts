@@ -7,7 +7,7 @@ export interface Exhibition {
   logo: string;
   startDate: Date;
   endDate: Date;
-  location: string;
+  address: string;
   status: 'Upcoming' | 'Live' | 'Completed';
   isActive: boolean;
 }
@@ -21,7 +21,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=1',
       startDate: new Date('2026-03-01'),
       endDate: new Date('2026-03-20'),
-      location: 'Mumbai',
+      address: 'Mumbai',
       status: 'Completed',
       isActive: false,
     },
@@ -31,7 +31,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=2',
       startDate: new Date('2026-03-15'),
       endDate: new Date('2026-04-05'),
-      location: 'Delhi',
+      address: 'Delhi',
       status: 'Live',
       isActive: true,
     },
@@ -41,7 +41,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=3',
       startDate: new Date('2026-04-10'),
       endDate: new Date('2026-04-25'),
-      location: 'Bangalore',
+      address: 'Bangalore',
       status: 'Upcoming',
       isActive: false,
     },
@@ -51,7 +51,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=4',
       startDate: new Date('2026-02-05'),
       endDate: new Date('2026-02-18'),
-      location: 'Pune',
+      address: 'Pune',
       status: 'Completed',
       isActive: false,
     },
@@ -61,7 +61,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=5',
       startDate: new Date('2026-03-20'),
       endDate: new Date('2026-04-10'),
-      location: 'Hyderabad',
+      address: 'Hyderabad',
       status: 'Live',
       isActive: true,
     },
@@ -71,7 +71,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=6',
       startDate: new Date('2026-05-01'),
       endDate: new Date('2026-05-20'),
-      location: 'Chennai',
+      address: 'Chennai',
       status: 'Upcoming',
       isActive: false,
     },
@@ -81,7 +81,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=7',
       startDate: new Date('2026-01-10'),
       endDate: new Date('2026-01-25'),
-      location: 'Kolkata',
+      address: 'Kolkata',
       status: 'Completed',
       isActive: false,
     },
@@ -91,7 +91,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=8',
       startDate: new Date('2026-04-15'),
       endDate: new Date('2026-05-05'),
-      location: 'Ahmedabad',
+      address: 'Ahmedabad',
       status: 'Upcoming',
       isActive: false,
     },
@@ -101,7 +101,7 @@ export class ExhibitionService {
       logo: 'https://picsum.photos/41?random=9',
       startDate: new Date('2026-03-10'),
       endDate: new Date('2026-03-30'),
-      location: 'Jaipur',
+      address: 'Jaipur',
       status: 'Live',
       isActive: true,
     },
@@ -129,7 +129,7 @@ export class ExhibitionService {
       logo: payload.logo || '',
       startDate: payload.startDate!,
       endDate: payload.endDate!,
-      location: payload.location || '',
+      address: payload.address || '',
       status: this.getStatus(payload.startDate!, payload.endDate!),
       isActive: payload.isActive ?? true,
     };

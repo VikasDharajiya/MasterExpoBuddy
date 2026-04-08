@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
 import { CommonModule } from '@angular/common';
+
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
+import { EditorModule } from 'primeng/editor';
 
 import { ExhibitorService } from '@features/exhibitor-management/services/exhibitor.service';
 import { ExhibitionService } from '@features/exhibition-management/services/exhibition.service';
@@ -14,7 +16,6 @@ import { Exhibition } from '@features/exhibition-management/models/exhibition-mo
 import { HeaderService } from '@shared/services/header.service';
 import { Toast } from '@shared/components/toast/toast';
 import { MessageService } from 'primeng/api';
-import { SelectModule } from 'primeng/select';
 
 @Component({
   standalone: true,
@@ -24,15 +25,17 @@ import { SelectModule } from 'primeng/select';
     InputTextModule,
     ButtonModule,
     ToggleSwitchModule,
-    SelectModule,
+    AutoCompleteModule,
+    EditorModule,
     Toast,
   ],
   providers: [MessageService],
   templateUrl: './add-exhibitor.html',
 })
-export class AddExhibitor {
-  form!: FormGroup;
+export class AddExhibitor implements OnInit {
+  @ViewChild('exhibitionAC') exhibitionAC!: AutoComplete;
 
+  form!: FormGroup;
   isEditMode = false;
   editId: number | null = null;
 
@@ -40,6 +43,7 @@ export class AddExhibitor {
   logoPreview: string | null = null;
 
   exhibitions: Exhibition[] = [];
+  filteredExhibitions: Exhibition[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -60,10 +64,18 @@ export class AddExhibitor {
 
     this.form = this.fb.group({
       name: [''],
+      companyName: [''],
+      email: [''],
+      contact1: [''],
+      contact2: [''],
+      contactPerson: [''],
+      reference: [''],
+      notes: [''],
+
       staffLimit: [0],
       exhibitionLimit: [0],
-      exhibitionId: [null],
-      exhibitionName: [''],
+      exhibitionIds: [[]],
+
       logo: [''],
       primaryColor: ['#000000'],
       secondaryColor: ['#ffffff'],
@@ -71,20 +83,16 @@ export class AddExhibitor {
       isActive: [true],
     });
 
-    // load exhibitions
     this.exhibitionService.getAll().subscribe((data) => {
       this.exhibitions = data;
     });
 
-    // edit mode
     const id = this.route.snapshot.paramMap.get('id');
-
     if (id) {
       this.isEditMode = true;
       this.editId = +id;
 
       const data = this.exhibitorService.getById(this.editId);
-
       if (data) {
         this.form.patchValue(data);
         this.logoPreview = data.logo;
@@ -92,12 +100,34 @@ export class AddExhibitor {
     }
   }
 
-  onExhibitionSelect(event: any) {
-    const selected = this.exhibitions.find((e) => e.id === event.value);
+  onExhibitionInputClick() {
+    this.filteredExhibitions = [...this.exhibitions];
+    this.exhibitionAC.show();
+  }
 
-    this.form.patchValue({
-      exhibitionName: selected?.name,
-    });
+  filterExhibitions(event: any) {
+    const query = (event.query || '').toLowerCase();
+
+    this.filteredExhibitions = this.exhibitions.filter((e) => e.name.toLowerCase().includes(query));
+  }
+
+  onExhibitionChange() {
+    const selected = this.form.value.exhibitionIds || [];
+    const limit = this.form.value.exhibitionLimit || 0;
+
+    if (limit && selected.length > limit) {
+      selected.pop();
+
+      this.form.patchValue({
+        exhibitionIds: selected,
+      });
+
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Limit reached',
+        detail: `Max ${limit} exhibitions allowed`,
+      });
+    }
   }
 
   onLogoSelect(event: any) {
@@ -109,10 +139,7 @@ export class AddExhibitor {
     const reader = new FileReader();
     reader.onload = () => {
       this.logoPreview = reader.result as string;
-
-      this.form.patchValue({
-        logo: this.logoPreview,
-      });
+      this.form.patchValue({ logo: this.logoPreview });
     };
 
     reader.readAsDataURL(file);
@@ -124,25 +151,26 @@ export class AddExhibitor {
 
   submit() {
     if (this.form.valid) {
+      console.log('Form Value:', this.form.value);
+      const selected = this.form.value.exhibitionIds as Exhibition[];
+
+      const payload = {
+        ...this.form.value,
+        exhibitionIds: (this.form.value.exhibitionIds as Exhibition[]).map((e) => e.id),
+        exhibitionNames: selected.map((e) => e.name),
+      };
+
       if (this.isEditMode) {
-        this.exhibitorService.update(this.editId!, this.form.value);
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Updated',
-          detail: 'Exhibitor updated successfully',
-          life: 3000,
-        });
+        this.exhibitorService.update(this.editId!, payload);
       } else {
-        this.exhibitorService.create(this.form.value);
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Created',
-          detail: 'Exhibitor added successfully',
-          life: 3000,
-        });
+        this.exhibitorService.create(payload);
       }
+
+      this.messageService.add({
+        severity: 'success',
+        summary: this.isEditMode ? 'Updated' : 'Created',
+        detail: 'Exhibitor saved successfully',
+      });
 
       setTimeout(() => {
         this.router.navigate(['/exhibitor-management']);

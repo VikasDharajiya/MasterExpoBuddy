@@ -10,21 +10,52 @@
   <h2 class="text-xl font-semibold text-gray-800">
     {{ isEditMode ? 'Edit Exhibitor' : 'Add Exhibitor' }}
   </h2>
-
-  <div></div>
 </div>
 
-<!-- FORM -->
 <form [formGroup]="form" class="w-full space-y-6 bg-white p-6 rounded-lg shadow-md">
-  <!-- NAME -->
-  <div>
-    <label class="text-sm font-medium text-gray-700">Name</label>
-    <input pInputText formControlName="name" class="w-full mt-1" />
+  <!-- BASIC INFO -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <label class="text-sm font-medium text-gray-700">
+        Name <span class="text-red-500">*</span>
+      </label>
+      <input pInputText formControlName="name" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Company Name</label>
+      <input pInputText formControlName="companyName" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Email</label>
+      <input pInputText type="email" formControlName="email" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Contact Person</label>
+      <input pInputText formControlName="contactPerson" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Contact Number 1</label>
+      <input pInputText formControlName="contact1" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Contact Number 2</label>
+      <input pInputText formControlName="contact2" class="w-full mt-1" />
+    </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Reference</label>
+      <input pInputText formControlName="reference" class="w-full mt-1" />
+    </div>
   </div>
 
   <!-- LOGO -->
   <div>
-    <label class="text-sm font-medium text-gray-700">Logo</label>
+    <label class="text-sm font-medium text-gray-700">Exhibitor Logo</label>
 
     <div class="flex items-center gap-4 mt-2">
       <label class="cursor-pointer">
@@ -38,7 +69,6 @@
         {{ logoFile?.name || 'No file chosen' }}
       </span>
 
-      <!-- Preview -->
       <!-- <img
         *ngIf="logoPreview"
         [src]="logoPreview"
@@ -48,7 +78,7 @@
   </div>
 
   <!-- LIMITS -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div>
       <label class="text-sm font-medium text-gray-700">Staff Limit</label>
       <input pInputText type="number" formControlName="staffLimit" class="w-full mt-1" />
@@ -58,20 +88,45 @@
       <label class="text-sm font-medium text-gray-700">Exhibition Limit</label>
       <input pInputText type="number" formControlName="exhibitionLimit" class="w-full mt-1" />
     </div>
+
+    <div>
+      <label class="text-sm font-medium text-gray-700">Storage Limit</label>
+      <input pInputText type="number" formControlName="storageLimit" class="w-full mt-1" />
+    </div>
   </div>
 
-  <!-- EXHIBITION DROPDOWN -->
+  <!-- EXHIBITIONS -->
   <div>
-    <label class="text-sm font-medium text-gray-700">Exhibition</label>
-    <p-select
-      [options]="exhibitions"
-      optionLabel="name"
-      optionValue="id"
-      formControlName="exhibitionId"
-      (onChange)="onExhibitionSelect($event)"
-      placeholder="Select Exhibition"
+    <label class="text-sm font-medium text-gray-700">Exhibitions</label>
+
+    <p-autocomplete
+      #exhibitionAC
+      formControlName="exhibitionIds"
+      [suggestions]="filteredExhibitions"
+      (completeMethod)="filterExhibitions($event)"
+      (focus)="onExhibitionInputClick()"
+      (click)="onExhibitionInputClick()"
+      (onSelect)="onExhibitionChange()"
+      (onUnselect)="onExhibitionChange()"
+      [multiple]="true"
+      [dropdown]="true"
+      field="name"
+      placeholder="Search exhibitions..."
       class="w-full mt-1"
-    ></p-select>
+    >
+      <ng-template let-exhibition #item>
+        <div class="py-1 text-sm">{{ exhibition.name }}</div>
+      </ng-template>
+
+      <ng-template let-value #selecteditem>
+        <span class="text-sm font-medium">{{ value?.name }}</span>
+      </ng-template>
+    </p-autocomplete>
+
+    <p class="text-xs text-gray-500 mt-1">
+      Selected: {{ form.value.exhibitionIds?.length || 0 }} /
+      {{ form.value.exhibitionLimit || 0 }}
+    </p>
   </div>
 
   <!-- COLORS -->
@@ -87,13 +142,13 @@
     </div>
   </div>
 
-  <!-- STORAGE -->
+  <!-- NOTES -->
   <div>
-    <label class="text-sm font-medium text-gray-700">Storage Limit</label>
-    <input pInputText type="number" formControlName="storageLimit" class="w-full mt-1" />
+    <label class="text-sm font-medium text-gray-700">Notes</label>
+    <p-editor formControlName="notes" [style]="{ height: '150px' }"></p-editor>
   </div>
 
-  <!-- Status -->
+  <!-- ACTIVE -->
   <div class="flex items-center gap-3">
     <label class="text-sm font-medium text-gray-700">Active</label>
     <p-toggleSwitch formControlName="isActive"></p-toggleSwitch>

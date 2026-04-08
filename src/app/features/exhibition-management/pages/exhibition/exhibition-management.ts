@@ -37,8 +37,8 @@ export class ExhibitionManagement implements OnInit {
       type: 'text',
     },
     {
-      field: 'location',
-      header: 'Location',
+      field: 'address',
+      header: 'Address',
       type: 'text',
     },
     {
@@ -115,7 +115,7 @@ export class ExhibitionManagement implements OnInit {
     const q = this.searchText.toLowerCase();
 
     this.filteredList = this.exhibitionList.filter((e) => {
-      return e.name.toLowerCase().includes(q) || e.location.toLowerCase().includes(q);
+      return e.name.toLowerCase().includes(q) || e.address.toLowerCase().includes(q);
     });
   }
 }

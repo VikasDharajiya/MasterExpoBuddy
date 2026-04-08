@@ -4,7 +4,7 @@ export interface Exhibition {
   logo: string; // image url/base64
   startDate: Date;
   endDate: Date;
-  location: string;
+  address: string;
   status: 'Upcoming' | 'Live' | 'Completed';
   isActive: boolean; // for toggle
 }
