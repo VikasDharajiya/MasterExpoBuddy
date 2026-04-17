@@ -1,9 +1,17 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Category } from '../models/category-model';
+import { Inject, Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { delay, map, tap } from 'rxjs/operators';
 
+import { Category } from '../models/category-model';
+import { environment } from '../../../../environments/environment';
 @Injectable({ providedIn: 'root' })
-export class categoryService {
+export class CategoryService {
+  private useMock = false;
+  constructor(private http: HttpClient) {}
+  // private http = Inject(HttpClient);
+
+  // ---------------- MOCK DATA ----------------
   private mockData: Category[] = [
     {
       id: 1,
@@ -81,49 +89,26 @@ export class categoryService {
     },
   ];
 
-  //  Main reactive store
-  private staffSubject = new BehaviorSubject<Category[]>([...this.mockData]);
-
-  //  Public stream
-  staff$ = this.staffSubject.asObservable();
-
-  // Get all
+  // ---------------- GET ALL ----------------
   getAll(): Observable<Category[]> {
-    return this.staff$;
-  }
-
-  // Create
-  create(payload: Partial<Category>): void {
-    const newStaff: Category = {
-      id: Date.now(),
-      name: payload.name || '',
-      sequence: payload.sequence || 0,
-      status: (payload.status as 'Active' | 'Inactive') || 'Active',
-      description: payload.description || '',
-      catalogueFile: payload.catalogueFile,
-    };
-
-    this.mockData.push(newStaff);
-    this.staffSubject.next([...this.mockData]); //  trigger update
-  }
-
-  //  Update
-  update(id: number, payload: Partial<Category>): void {
-    const index = this.mockData.findIndex((s) => s.id === id);
-
-    if (index > -1) {
-      this.mockData[index] = {
-        ...this.mockData[index],
-        ...payload,
-      } as Category;
-
-      this.staffSubject.next([...this.mockData]); //  trigger update
+    if (this.useMock) {
+      return of(this.mockData);
     }
+
+    return this.http.get<any>(`${environment.apiUrl}/admin/category/list`).pipe(
+      map((res) => res.data || []), // always return array
+    );
   }
 
-  // Delete
-  delete(id: number): void {
-    this.mockData = this.mockData.filter((s) => s.id !== id);
-    this.staffSubject.next([...this.mockData]); //  trigger update
+  create(payload: Partial<Category>): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/categories`, payload);
+  }
+
+  update(id: number, payload: Partial<Category>): Observable<any> {
+    return this.http.put(`${environment.apiUrl}/categories/${id}`, payload);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/categories/${id}`);
   }
 }

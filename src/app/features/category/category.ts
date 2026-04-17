@@ -6,7 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 import { Category } from './models/category-model';
-import { categoryService } from './services/category.service';
+import { CategoryService } from './services/category.service';
 import { CategoryDialog, DialogMode } from './components/category-dialoge/category-dialoge';
 import { Table } from '@shared/components/table/table';
 import { TableColumn } from '@shared/models/table-column.model';
@@ -56,14 +56,14 @@ export class CategoryManagement implements OnInit {
     { field: 'description', header: 'Description', type: 'text', sortable: true },
   ];
 
-  staffList: Category[] = [];
+  categoryList: Category[] = [];
   filteredCategory: Category[] = [];
 
   constructor(
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private headerService: HeaderService,
-    private staffService: categoryService,
+    private categoryService: CategoryService,
   ) {}
 
   ngOnInit() {
@@ -73,10 +73,26 @@ export class CategoryManagement implements OnInit {
       'pi pi-tags',
     );
 
-    //  subscribe once → auto updates forever
-    this.staffService.getAll().subscribe((data) => {
-      this.staffList = data;
-      this.applyAllFilters();
+    localStorage.setItem(
+      'token',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImJhNjE1YWVjLTc0NzQtNDA4Ni05ZDljLTZkMDVjYmFlZTQ1NiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6InRlc3RAZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6InRlc3RAZ21haWwuY29tIiwiQXNwTmV0VXNlcklkIjoiYmE2MTVhZWMtNzQ3NC00MDg2LTlkOWMtNmQwNWNiYWVlNDU2IiwiUm9sZSI6IkV4aGliaXRvciIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IkV4aGliaXRvciIsIkV4aGliaXRvcklkIjoiMSIsImV4cCI6MjYzOTYyNDQzNywiaXNzIjoiVGVzdC5jb20iLCJhdWQiOiJBdWRpZW5jZSJ9.jFhF-k4-YGCLl7j6Ml4mPBi8aSFrpqHyY_gidE6mFrk',
+    );
+
+    this.loadCategories();
+
+    console.log(localStorage.getItem('token'));
+  }
+
+  loadCategories() {
+    this.categoryService.getAll().subscribe({
+      next: (res) => {
+        console.log('API DATA ✅', res);
+        this.categoryList = res;
+        this.applyAllFilters();
+      },
+      error: (err) => {
+        console.log('API ERROR ❌', err);
+      },
     });
   }
 
@@ -109,7 +125,9 @@ export class CategoryManagement implements OnInit {
       rejectButtonStyleClass: 'p-button-outlined',
 
       accept: () => {
-        this.staffService.delete(staff.id); //  no subscribe needed
+        this.categoryService.delete(staff.id).subscribe(() => {
+          this.loadCategories();
+        });
 
         this.messageService.add({
           severity: 'success',
@@ -122,20 +140,23 @@ export class CategoryManagement implements OnInit {
 
   onSave(form: Partial<Category>) {
     if (this.dialogMode === 'edit') {
-      this.staffService.update(form.id!, form);
-      this.messageService.add({
-        severity: 'success',
-        detail: 'Category updated successfully.',
-        life: 3000,
+      this.categoryService.update(form.id!, form).subscribe(() => {
+        this.loadCategories(); // refresh after update
       });
     } else {
-      this.staffService.create(form);
-      this.messageService.add({
-        severity: 'success',
-        detail: 'Category added successfully.',
-        life: 3000,
+      this.categoryService.create(form).subscribe(() => {
+        this.loadCategories(); // refresh after create
       });
     }
+
+    this.messageService.add({
+      severity: 'success',
+      detail:
+        this.dialogMode === 'edit'
+          ? 'Category updated successfully.'
+          : 'Category added successfully.',
+      life: 3000,
+    });
 
     this.showDialog = false;
   }
@@ -143,7 +164,7 @@ export class CategoryManagement implements OnInit {
   applyAllFilters() {
     const q = this.searchText.toLowerCase();
 
-    this.filteredCategory = this.staffList.filter((c) => {
+    this.filteredCategory = this.categoryList.filter((c) => {
       const matchSearch = c.name.toLowerCase().includes(q);
 
       const matchStatus = this.statusFilter === 'all' || c.status === this.statusFilter;

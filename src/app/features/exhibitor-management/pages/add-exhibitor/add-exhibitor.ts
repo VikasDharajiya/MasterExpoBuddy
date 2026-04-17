@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { InputTextModule } from 'primeng/inputtext';
@@ -66,8 +66,8 @@ export class AddExhibitor implements OnInit {
       name: [''],
       companyName: [''],
       email: [''],
-      contact1: [''],
-      contact2: [''],
+      contact1: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      contact2: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       contactPerson: [''],
       reference: [''],
       notes: [''],

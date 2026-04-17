@@ -3,16 +3,73 @@
 @import 'tailwindcss';
 
 :root {
-  --p-primary-50: #eff6ff;
-  --p-primary-100: #dbeafe;
-  --p-primary-200: #bfdbfe;
-  --p-primary-300: #93c5fd;
-  --p-primary-400: #60a5fa;
-  --p-primary-500: #006dff;
-  --p-primary-600: #2563eb;
-  --p-primary-700: #1d4ed8;
-  --p-primary-800: #1e40af;
-  --p-primary-900: #1e3a8a;
+  /* PRIMARY PALETTE (50–900) */
+  /* icons bg */
+  /* --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #006dff;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a8a; */
+
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  /* main (icons and btn)*/
+  --primary-500: #006dff;
+  /* sidebar text */
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a8a;
+
+  /* secondary */
+  --secondary-50: #f0fdf4;
+  --secondary-100: #dcfce7;
+  --secondary-200: #bbf7d0;
+  --secondary-300: #86efac;
+  --secondary-400: #4ade80;
+  --secondary-500: #22c55e;
+  --secondary-600: #16a34a;
+  --secondary-700: #15803d;
+  --secondary-800: #166534;
+  --secondary-900: #14532d;
+
+  /* NEUTRAL COLORS */
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* bg */
+  --bg: #ffffff;
+
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+
+  /* text */
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+
+  --text-muted: #9ca3af;
+
+  /* BORDER */
+  --border: #f3f4f6;
+  --border-2: #e5e7eb;
+  --border-3: #d1d5db;
 }
 
 /* dialoge border */

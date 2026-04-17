@@ -59,13 +59,13 @@ export class Sidebar {
   ];
 
   bottomItems: NavItem[] = [
-    { label: 'Settings', icon: 'pi pi-cog', route: '/settings' },
-    {
-      label: 'Notifications',
-      icon: 'pi pi-bell',
-      route: '/notifications',
-      badge: 3,
-    },
+    // { label: 'Settings', icon: 'pi pi-cog', route: '/settings' },
+    // {
+    //   label: 'Notifications',
+    //   icon: 'pi pi-bell',
+    //   route: '/notifications',
+    //   badge: 3,
+    // },
   ];
 
   toggleSidebar() {
